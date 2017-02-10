@@ -5,13 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Author: Season(ssseasonnn@gmail.com)
- * Date: 2016/11/14
- * Time: 10:02
- * FIXME
+ * 数据库助手
+ * Created by zhouL on 2017/2/10.
  */
 class DbOpenHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "zlc_season_rxdownload_download.db";
+    private static final String DATABASE_NAME = "lodz_download.db";
     private static final int DATABASE_VERSION = 1;
 
     DbOpenHelper(Context context) {

@@ -1,5 +1,6 @@
 package com.lodz.android.downloadlib;
 
+
 import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;

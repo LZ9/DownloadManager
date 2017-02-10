@@ -2,6 +2,7 @@ package com.lodz.android.downloadlib.db;
 
 import android.content.ContentValues;
 
+import com.lodz.android.downloadlib.Constant;
 import com.lodz.android.downloadlib.bean.DownloadTask;
 import com.lodz.android.downloadlib.bean.TaskBlock;
 
@@ -11,13 +12,13 @@ import java.util.Date;
  * 数据库配置
  * Created by zhouL on 2017/2/10.
  */
-public class DbSql {
+class DbSql {
 
     /** 下载记录表 */
-    public static class RecordTable {
+    static class RecordTable {
 
         /** 表名 */
-        private static final String TABLE_NAME = "download_record";
+        static final String TABLE_NAME = "download_record";
 
         private static final String COLUMN_ID = "id";// 主键id，自增
         private static final String COLUMN_TASK_ID = "task_id";// 下载任务id
@@ -32,7 +33,7 @@ public class DbSql {
         private static final String COLUMN_DATE = "date";// 下载时间毫秒时间戳
 
         /** 建表 */
-        public static final String CREATE_TABLE =
+        static final String CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         COLUMN_TASK_ID + " INTEGER," +
@@ -41,9 +42,9 @@ public class DbSql {
                         COLUMN_URL + " TEXT NOT NULL," +
                         COLUMN_SAVE_NAME + " TEXT," +
                         COLUMN_SAVE_PATH + " TEXT," +
-                        COLUMN_DOWNLOAD_SIZE + " TEXT," +
-                        COLUMN_BLOCK_SIZE + " TEXT," +
-                        COLUMN_BLOCK_STATUS + " INTEGER," +
+                        COLUMN_DOWNLOAD_SIZE + " TEXT DEFAULT 0," +
+                        COLUMN_BLOCK_SIZE + " TEXT DEFAULT 0," +
+                        COLUMN_BLOCK_STATUS + " INTEGER DEFAULT " + Constant.DownloadStatus.WAITING + "," +
                         COLUMN_DATE + " TEXT NOT NULL " +
                         " )";
 
@@ -52,7 +53,7 @@ public class DbSql {
          * @param task 下载任务
          * @param block 任务分块
          */
-        public static ContentValues insert(DownloadTask task, TaskBlock block) {
+        static ContentValues insert(DownloadTask task, TaskBlock block) {
             ContentValues values = new ContentValues();
             values.put(COLUMN_TASK_ID, task.taskId);
             values.put(COLUMN_BLOCK_ID, block.blockId);
@@ -66,6 +67,9 @@ public class DbSql {
             values.put(COLUMN_DATE, new Date().getTime());
             return values;
         }
+
+
+
 
     }
 

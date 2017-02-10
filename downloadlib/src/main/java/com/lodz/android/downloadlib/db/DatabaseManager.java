@@ -1,34 +1,141 @@
 package com.lodz.android.downloadlib.db;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.lodz.android.downloadlib.bean.DownloadTask;
+import com.lodz.android.downloadlib.bean.TaskBlock;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+
+import static com.lodz.android.downloadlib.db.DbSql.RecordTable.TABLE_NAME;
 
 
 /**
- * 主界面
+ * 数据库管理类
  * Created by zhouL on 2016/11/22.
  */
-public class DataBaseHelper {
-    private volatile static DataBaseHelper singleton;
-    private final Object databaseLock = new Object();
-    private DbOpenHelper mDbOpenHelper;
-    private volatile SQLiteDatabase readableDatabase;
-    private volatile SQLiteDatabase writableDatabase;
+public class DatabaseManager implements DatabaseContract{
 
-    private DataBaseHelper(Context context) {
-        mDbOpenHelper = new DbOpenHelper(context);
-    }
+    private volatile static DatabaseManager mInstance;
 
-    public static DataBaseHelper getSingleton(Context context) {
-        if (singleton == null) {
-            synchronized (DataBaseHelper.class) {
-                if (singleton == null) {
-                    singleton = new DataBaseHelper(context);
+    public static DatabaseManager get(Context context) {
+        if (mInstance == null) {
+            synchronized (DatabaseManager.class) {
+                if (mInstance == null) {
+                    mInstance = new DatabaseManager(context);
                 }
             }
         }
-        return singleton;
+        return mInstance;
     }
+
+    /** 数据库助手 */
+    private DbOpenHelper mDbOpenHelper;
+    /** 对象锁 */
+    private final Object databaseLock = new Object();
+    /** 可读数据库 */
+    private volatile SQLiteDatabase readableDatabase;
+    /** 可写数据库 */
+    private volatile SQLiteDatabase writableDatabase;
+
+    private DatabaseManager(Context context) {
+        mDbOpenHelper = new DbOpenHelper(context);
+    }
+
+    /** 关闭数据库 */
+    public void closeDatabase() {
+        synchronized (databaseLock) {
+            readableDatabase = null;
+            writableDatabase = null;
+            mDbOpenHelper.close();
+        }
+    }
+
+    /** 获取可写数据库 */
+    private SQLiteDatabase getWritableDatabase() {
+        SQLiteDatabase db = writableDatabase;
+        if (db == null) {
+            synchronized (databaseLock) {
+                db = writableDatabase;
+                if (db == null) {
+                    db = writableDatabase = mDbOpenHelper.getWritableDatabase();
+                }
+            }
+        }
+        return db;
+    }
+
+    /** 获取可读数据库 */
+    private SQLiteDatabase getReadableDatabase() {
+        SQLiteDatabase db = readableDatabase;
+        if (db == null) {
+            synchronized (databaseLock) {
+                db = readableDatabase;
+                if (db == null) {
+                    db = readableDatabase = mDbOpenHelper.getReadableDatabase();
+                }
+            }
+        }
+        return db;
+    }
+
+
+    @Override
+    public Observable<Boolean> taskExists(DownloadTask task, TaskBlock block) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
+                Cursor cursor = null;
+                try {
+//                    cursor = getReadableDatabase().query(TABLE_NAME, new String[]{COLUMN_ID}, "url=?", new String[]{url}, null, null, null);
+//                    Cursor cursor = null;
+//                    try {
+//                        cursor = getReadableDatabase().query(TABLE_NAME, new String[]{COLUMN_ID}, "url=?",
+//                                new String[]{url}, null, null, null);
+//                        return cursor.getCount() == 0;
+//                    } finally {
+//                        if (cursor != null) {
+//                            cursor.close();
+//                        }
+//                    }
+
+
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    emitter.onError(e);
+                }finally {
+                    if (cursor != null){
+                        cursor.close();
+                    }
+                    emitter.onComplete();
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<Boolean> insertTaskBlock(final DownloadTask task, final TaskBlock block) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
+                try {
+                    long isSuccess = getWritableDatabase().insert(TABLE_NAME, null, DbSql.RecordTable.insert(task, block));
+                    emitter.onNext(isSuccess != -1);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    emitter.onError(e);
+                }finally {
+                    emitter.onComplete();
+                }
+            }
+        });
+    }
+
 
 //    public boolean recordExists(String url) {
 //        return !recordNotExists(url);
@@ -166,31 +273,5 @@ public class DataBaseHelper {
 //                }
 //            }
 //        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-//    }
-//
-//    private SQLiteDatabase getWritableDatabase() {
-//        SQLiteDatabase db = writableDatabase;
-//        if (db == null) {
-//            synchronized (databaseLock) {
-//                db = writableDatabase;
-//                if (db == null) {
-//                    db = writableDatabase = mDbOpenHelper.getWritableDatabase();
-//                }
-//            }
-//        }
-//        return db;
-//    }
-//
-//    private SQLiteDatabase getReadableDatabase() {
-//        SQLiteDatabase db = readableDatabase;
-//        if (db == null) {
-//            synchronized (databaseLock) {
-//                db = readableDatabase;
-//                if (db == null) {
-//                    db = readableDatabase = mDbOpenHelper.getReadableDatabase();
-//                }
-//            }
-//        }
-//        return db;
 //    }
 }
