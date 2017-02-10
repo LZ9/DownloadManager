@@ -3,6 +3,10 @@ package com.snxun.downloaddemo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+/**
+ * 主界面
+ * Created by zhouL on 2016/11/22.
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override

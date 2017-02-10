@@ -1,14 +1,15 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+
     defaultConfig {
-        applicationId "com.snxun.downloaddemo"
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+
     }
     buildTypes {
         release {
@@ -18,8 +19,10 @@ android {
     }
 }
 
-dependencies {
-    compile project(':downloadlib')
 
-    compile 'com.android.support:appcompat-v7:25.1.1'
+dependencies {
+
+    // OkHttp
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+
 }
