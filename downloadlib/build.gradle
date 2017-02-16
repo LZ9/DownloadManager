@@ -8,7 +8,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
 
     }
     buildTypes {
@@ -21,12 +21,19 @@ android {
 
 
 dependencies {
-    compile 'com.android.support:support-annotations:25.1.1'
+    compile 'cn.lodz:core:1.0.2'
     // OkHttp
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 
     // RxJava
     compile 'io.reactivex.rxjava2:rxjava:2.0.5'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    // Retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+    compile 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
+    compile 'com.alibaba:fastjson:1.2.20'
 
 }

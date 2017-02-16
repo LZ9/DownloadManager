@@ -1,8 +1,7 @@
 package com.lodz.android.downloadlib.bean;
 
-import android.util.SparseArray;
-
-import com.lodz.android.downloadlib.Constant;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -12,27 +11,21 @@ import com.lodz.android.downloadlib.Constant;
 public class DownloadTask {
 
     /** 任务id */
-    public int taskId;
+    public String taskId = "";
     /** 下载地址 */
-    public String url;
+    public String url = "";
     /** 保存名称 */
-    public String saveName;
+    public String saveName = "";
     /** 保存地址 */
-    public String savePath;
-    /** 下载状态 */
-    @Constant.DownloadStatus
-    public int taskStatus = Constant.DownloadStatus.WAITING;
+    public String savePath = "";
+    /** 临时文件地址 */
+    public String tempFilePath = "";
+    /** 文件长度 */
+    public long contentLength = 0;
     /** 任务块 */
-    public SparseArray<TaskBlock> blockSparseArray;
+    public Map<String, TaskBlock> taskBlockMap;
 
     public DownloadTask() {
-        blockSparseArray = new SparseArray<>();
+        taskBlockMap = new HashMap<>();
     }
-
-
-
-
-
-
-
 }
